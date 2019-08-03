@@ -16,8 +16,7 @@ router.post('/register', function (req, res, next) {
     if (doc) {
       console.log('registered user')
       return res.status(403).json({ message: 'Registered user.' })   
-    }
-    else {
+    } else {
       let promise = user.save();
 
       promise.then(function (doc) {
