@@ -11,15 +11,24 @@ router.post('/register', function (req, res, next) {
     creation_dt: Date.now()
   });
 
-  let promise = user.save();
-
+  let promise = User.findOne({ email: req.body.email }).exec();
   promise.then(function (doc) {
-    return res.status(201).json(doc);
-  })
+    if (doc) {
+      console.log('registered user')
+      return res.status(403).json({ message: 'Registered user.' })   
+    }
+    else {
+      let promise = user.save();
 
-  promise.catch(function (err) {
-    return res.status(501).json({ message: 'Error registering user.' })
-  })
+      promise.then(function (doc) {
+        return res.status(201).json(doc);
+      })
+
+      promise.catch(function (err) {
+        return res.status(501).json({ message: 'Error registering user.' })
+      })
+    }
+  });
 })
 
 router.post('/login', function (req, res, next) {
